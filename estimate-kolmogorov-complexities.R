@@ -10,18 +10,26 @@ args = commandArgs(trailingOnly=TRUE)
 SIZE <- strtoi(args[1])
 OUTPUT_FILE <- args[2]
 
-asBinary <- function (x, nBits = 8){
-   paste(tail(rev(as.numeric(intToBits(x))), nBits), collapse='')
+asBinary <- function(x, nBits = 8) {
+    paste(tail(rev(as.numeric(intToBits(x))), nBits), collapse='')
 }
 
 # Clear the file
 close(file(OUTPUT_FILE, open="w"))
 
-i <- 0
-while (i < 2 ** SIZE) {
+getKCs <- function() {
+    result <- vector(length=2**SIZE)
+    i <- 1
+    while (i <= 2 ** SIZE) {
+        result[i] = acss(string = asBinary(i), alphabet = 2)[1]
+        i = i + 1
+    }
+    return(result)
+}
+
+for (value in getKCs()) {
     write(
-        toString(acss(string = asBinary(i), alphabet = 2)[1]),
+        toString(value),
         file=OUTPUT_FILE, append=TRUE
     )
-    i = i + 1
 }
