@@ -4,6 +4,7 @@
 # 0 ... 2 ^ SIZE to OUTPUT_FILE.
 
 require(acss)
+library(parallel)
 
 args = commandArgs(trailingOnly=TRUE)
 
@@ -18,13 +19,11 @@ asBinary <- function(x, nBits = 8) {
 close(file(OUTPUT_FILE, open="w"))
 
 getKCs <- function() {
-    result <- vector(length=2**SIZE)
-    i <- 1
-    while (i <= 2 ** SIZE) {
-        result[i] = acss(string = asBinary(i), alphabet = 2)[1]
-        i = i + 1
-    }
-    return(result)
+    return(mclapply(0:(2**SIZE - 1), getKC, mc.cores=detectCores()))
+}
+
+getKC <- function(i) {
+    return(acss(string = asBinary(i), alphabet = 2)[1])
 }
 
 for (value in getKCs()) {
