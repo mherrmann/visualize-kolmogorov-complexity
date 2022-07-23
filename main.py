@@ -9,7 +9,7 @@ from os.path import exists, join, dirname, relpath
 from subprocess import check_call
 
 OUT_DIR = join(dirname(__file__), 'out')
-NUM_BITS = 12
+NUM_BITS = int(sys.argv[1]) if len(sys.argv) > 1 else 12
 
 def main():
     makedirs(OUT_DIR, exist_ok=True)
